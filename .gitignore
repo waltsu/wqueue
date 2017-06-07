@@ -5,3 +5,4 @@ env
 *.log
 .DS_Store
 *.log.*
+.cache
