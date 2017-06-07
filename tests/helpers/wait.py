@@ -13,4 +13,3 @@ def wait_until_success(function, poll_time=0.1, poll_count=10):
 
   if not success:
     raise AssertionError("Waited %ss without success" % str(poll_time * poll_count))
-
