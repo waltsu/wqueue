@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class Worker(object):
   def __init__(self, function):
-    self.event_loop = asyncio.get_event_loop()
+    self.event_loop = asyncio.new_event_loop()
     self.loop_thread = threading.Thread(target=self._start_event_loop)
     self.function = function
 
@@ -25,7 +25,6 @@ class Worker(object):
     self.event_loop.run_forever()
 
   def _execute(self):
-    logger.debug("Executing something")
     self.function()
     if self.event_loop.is_running():
       self.event_loop.call_soon(self._execute)
