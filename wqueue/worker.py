@@ -6,14 +6,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Worker(object):
-  def __init__(self):
+  def __init__(self, function):
     self.event_loop = asyncio.get_event_loop()
     self.loop_thread = threading.Thread(target=self._start_event_loop)
+    self.function = function
 
   def start(self):
     self.loop_thread.start()
 
   def stop(self):
+    self.stopped = True
     logger.debug("Stopping worker %s" % str(self))
     self.event_loop.stop()
 
@@ -24,5 +26,6 @@ class Worker(object):
 
   def _execute(self):
     logger.debug("Executing something")
-    time.sleep(1)
-    self.event_loop.call_soon(self._execute)
+    self.function()
+    if self.event_loop.is_running():
+      self.event_loop.call_soon(self._execute)
