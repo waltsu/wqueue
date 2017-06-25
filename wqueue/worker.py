@@ -15,7 +15,6 @@ class Worker(object):
     self.loop_thread.start()
 
   def stop(self):
-    self.stopped = True
     logger.debug("Stopping worker %s" % str(self))
     self.event_loop.stop()
 

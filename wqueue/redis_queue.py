@@ -1,4 +1,4 @@
-class Queue(object):
+class RedisQueue(object):
   def __init__(self):
     self.handlers = []
 
