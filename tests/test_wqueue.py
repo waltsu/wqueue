@@ -14,5 +14,4 @@ class WqueueTestCase(unittest.TestCase):
     handler = wqueue.redis_adapter.handlers[0]
     self.assertEqual(handler["queue_name"], "my_queue")
 
-    return_value = handler["handler"](None)
-    self.assertEqual(return_value, "test_handler")
+    self.assertIsNotNone(handler["worker"])
