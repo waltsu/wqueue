@@ -1,10 +1,25 @@
 import unittest
+from unittest.mock import Mock
+
+import redis
 
 from wqueue.redis_adapter import RedisAdapter
 
+from tests.helpers.wait import wait_until_success
+
 class RedisAdapterTestCase(unittest.TestCase):
+  def setUp(self):
+    self.redis_client = redis.StrictRedis(host="localhost", port=6379)
+
   def test_starts_to_listen_queues(self):
     redis_adapter = RedisAdapter()
-    redis_adapter.register("my_queue", lambda event: event)
+    mock = Mock()
+    redis_adapter.register("my_queue", mock)
 
-    redis_adapter.listen() # Not implemented
+    try:
+      redis_adapter.start_listening()
+
+      self.redis_client.rpush("my_queue", 1, 2)
+      wait_until_success(lambda: self.assertEqual(mock.call_count, 2))
+    finally:
+      redis_adapter.stop_listening()
