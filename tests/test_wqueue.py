@@ -1,6 +1,6 @@
 import unittest
 
-from wqueue.wqueue import WQueue
+from wqueue import WQueue
 
 
 class WqueueTestCase(unittest.TestCase):
