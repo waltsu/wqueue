@@ -12,3 +12,6 @@ class WQueue(object):
         def function_wrapper(function):
             self.redis_adapter.register(queue_name, function)
         return function_wrapper
+
+    def start(self):
+        self.redis_adapter.start_listening()
