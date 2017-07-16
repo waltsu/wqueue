@@ -1,6 +1,7 @@
 import threading
 
 from wqueue.config import get_config
+from wqueue.event import Event
 
 
 class QueueListener(object):
@@ -24,4 +25,4 @@ class QueueListener(object):
             # TODO: READ FROM CONFIG
             redis_response = redis_client.blpop([queue_name], timeout=self.config["pop_timeout"])
             if redis_response:
-                message_queue.put_nowait(redis_response[1])
+                message_queue.put_nowait(Event(queue_name, redis_response[1]))
