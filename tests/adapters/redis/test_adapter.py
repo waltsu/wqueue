@@ -1,21 +1,20 @@
-import unittest
-
 import redis
 from queue import Queue
 
-from wqueue.defaults import DEFAULTS
 from wqueue.adapters.redis.adapter import Adapter
 
+from tests.wqueue_test_case import WQueueTestCase
 from tests.helpers.wait import wait_until_success
 
 
-class RedisAdapterTestCase(unittest.TestCase):
+class RedisAdapterTestCase(WQueueTestCase):
     def setUp(self):
+        super().setUp()
         self.redis_client = redis.StrictRedis(host="localhost", port=6379)
 
     def test_starts_to_listen_queues(self):
         message_queue = Queue()
-        redis_adapter = Adapter(DEFAULTS, message_queue)
+        redis_adapter = Adapter(message_queue)
         redis_adapter.register("my_queue", lambda x: x)
 
         try:
@@ -28,7 +27,7 @@ class RedisAdapterTestCase(unittest.TestCase):
 
     def test_can_listen_multiple_queues(self):
         message_queue = Queue()
-        redis_adapter = Adapter(DEFAULTS, message_queue)
+        redis_adapter = Adapter(message_queue)
 
         redis_adapter.register("first_queue", lambda x: x)
 

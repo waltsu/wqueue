@@ -1,10 +1,13 @@
 import threading
 
+from wqueue.config import get_config
+
 
 class QueueListener(object):
     def __init__(self, queue_name, message_queue, redis_client):
         self.thread = threading.Thread(target=self._listen_queue, args=[queue_name, message_queue, redis_client])
         self.is_running = False
+        self.config = get_config()["redis"]
 
     def start(self):
         self.is_running = True
@@ -19,6 +22,6 @@ class QueueListener(object):
         """
         while self.is_running:
             # TODO: READ FROM CONFIG
-            redis_response = redis_client.blpop([queue_name], timeout=1)
+            redis_response = redis_client.blpop([queue_name], timeout=self.config["pop_timeout"])
             if redis_response:
                 message_queue.put_nowait(redis_response[1])

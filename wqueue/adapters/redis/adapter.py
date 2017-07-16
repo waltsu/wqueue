@@ -2,17 +2,19 @@ import logging
 import redis
 
 from wqueue.adapters.redis.queue import QueueListener
+from wqueue.config import get_config
 
 logger = logging.getLogger(__name__)
 
 
 class Adapter(object):
-    def __init__(self, configs, message_queue):
-        self.configs = configs["redis"]
+    def __init__(self, message_queue):
+        self.config = get_config()["redis"]
+
         self.message_queue = message_queue
 
         self.handlers = []
-        self.redis_client = redis.StrictRedis(host=self.configs["host"], port=self.configs["port"])
+        self.redis_client = redis.StrictRedis(host=self.config["host"], port=self.config["port"])
 
     def register(self, queue_name, handler):
         logger.debug("Registering %s" % queue_name)
