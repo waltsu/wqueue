@@ -3,6 +3,7 @@ import logging
 from queue import Queue
 
 from wqueue.config import set_config
+from wqueue.adapters.redis_adapter import RedisAdapter
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -14,7 +15,6 @@ class WQueue(object):
 
         self.message_queue = Queue()
 
-        from wqueue.adapters.redis_adapter import RedisAdapter
         self.adapter = RedisAdapter(self.message_queue)
 
     def listen_events(self, queue_name):
