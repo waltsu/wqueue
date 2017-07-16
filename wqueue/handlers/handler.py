@@ -1,4 +1,4 @@
-from wqueue.handlers.multi_thread import MultiThreadHandler
+from wqueue.handlers.multi_thread_handler import MultiThreadHandler
 
 
 class Handler(object):

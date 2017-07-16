@@ -17,7 +17,7 @@ class HandlerTestCase(WQueueTestCase):
 
         self.assertEqual(len(handler.functions.keys()), 1)
 
-    @patch('wqueue.handlers.multi_thread.MultiThreadHandler.start')
+    @patch('wqueue.handlers.multi_thread_handler.MultiThreadHandler.start')
     def test_starts_multi_thread_handler(self, start_patch):
         handler = Handler(self.queue)
         handler.start()

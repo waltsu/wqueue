@@ -2,7 +2,7 @@ import threading
 from unittest.mock import Mock
 from queue import Queue
 
-from wqueue.handlers.multi_thread import MultiThreadHandler
+from wqueue.handlers.multi_thread_handler import MultiThreadHandler
 from wqueue.event import Event
 from wqueue.config import get_config
 
