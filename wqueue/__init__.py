@@ -1,4 +1,7 @@
 import logging
+
+from queue import Queue
+
 from wqueue.config import set_config
 
 
@@ -9,13 +12,15 @@ class WQueue(object):
     def __init__(self, config=None):
         set_config(config)
 
-        from wqueue.adapters.redis.adapter import RedisAdapter
-        self.redis_adapter = RedisAdapter(self.config)
+        self.message_queue = Queue()
+
+        from wqueue.adapters.redis.adapter import Adapter as RedisAdapter
+        self.adapter = RedisAdapter(self.message_queue)
 
     def listen_events(self, queue_name):
         def function_wrapper(function):
-            self.redis_adapter.register(queue_name, function)
+            self.adapter.register(queue_name, function)
         return function_wrapper
 
     def start(self):
-        self.redis_adapter.start_listening()
+        self.adapter.start_listening()
