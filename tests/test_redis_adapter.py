@@ -4,6 +4,7 @@ from unittest.mock import Mock
 import redis
 
 from wqueue.redis_adapter import RedisAdapter
+from wqueue.defaults import DEFAULTS
 
 from tests.helpers.wait import wait_until_success
 
@@ -13,7 +14,7 @@ class RedisAdapterTestCase(unittest.TestCase):
         self.redis_client = redis.StrictRedis(host="localhost", port=6379)
 
     def test_starts_to_listen_queues(self):
-        redis_adapter = RedisAdapter()
+        redis_adapter = RedisAdapter(DEFAULTS)
         mock = Mock()
         redis_adapter.register("my_queue", mock)
 
@@ -26,7 +27,7 @@ class RedisAdapterTestCase(unittest.TestCase):
             redis_adapter.stop_listening()
 
     def test_can_listen_multiple_queues(self):
-        redis_adapter = RedisAdapter()
+        redis_adapter = RedisAdapter(DEFAULTS)
 
         first_queue_mock = Mock()
         redis_adapter.register("first_queue", first_queue_mock)
