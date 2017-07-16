@@ -14,7 +14,7 @@ class WQueue(object):
 
         self.message_queue = Queue()
 
-        from wqueue.adapters.redis.adapter import Adapter as RedisAdapter
+        from wqueue.adapters.redis_adapter import RedisAdapter
         self.adapter = RedisAdapter(self.message_queue)
 
     def listen_events(self, queue_name):

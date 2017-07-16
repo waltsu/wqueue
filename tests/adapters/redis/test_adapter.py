@@ -1,7 +1,7 @@
 import redis
 from queue import Queue
 
-from wqueue.adapters.redis.adapter import Adapter
+from wqueue.adapters.redis_adapter import RedisAdapter
 
 from tests.wqueue_test_case import WQueueTestCase
 from tests.helpers.wait import wait_until_success
@@ -14,7 +14,7 @@ class RedisAdapterTestCase(WQueueTestCase):
 
     def test_starts_to_listen_queues(self):
         message_queue = Queue()
-        redis_adapter = Adapter(message_queue)
+        redis_adapter = RedisAdapter(message_queue)
         redis_adapter.register("my_queue", lambda x: x)
 
         try:
@@ -27,7 +27,7 @@ class RedisAdapterTestCase(WQueueTestCase):
 
     def test_can_listen_multiple_queues(self):
         message_queue = Queue()
-        redis_adapter = Adapter(message_queue)
+        redis_adapter = RedisAdapter(message_queue)
 
         redis_adapter.register("first_queue", lambda x: x)
 
