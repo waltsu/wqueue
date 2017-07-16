@@ -8,20 +8,41 @@ WQueue can be used to build Asynchronous Event-Based architectures where events 
 
 In the future the idea is to create service which supports multiple message brokers and which will implement different concurrency models to handle incoming events.
 
+## Installation
+
+Use `pip install -r requirements.txt` to install requirements.
+
+## Tests
+
+Run tests with pytest:
+```
+pytest
+```
+
+To output coverage report:
+```
+pytest --cov=wqueue
+```
+
 ## Example
 
 You have a source service which needs to communicate with your Python service. With WQueue only requirement for the source service is that it needs to be able to communicate using one of the supported message brokers (Currently only Redis with RPUSH / BLPOP is supported).
 
-In WQueue you can listen messages from queue using `listen_events` function that takes queue name as an parameter:
+With WQueue you can listen messages from queue using `listen_events` function that takes queue name as an parameter:
 
 ```
-from wqueue.wqueue import WQueue
+from wqueue import WQueue
 
 wqueue = WQueue()
 
 @wqueue.listen_events("my_queue")
 def message_handler(message):
   print(message)
+```
+
+To start WQueue worker, execute `wqueue/cli.py worker` and specify your application with `-a` parameter:
+```
+python wqueue/cli.py worker -a "example.example_usage"
 ```
 
 Now each time the source service pushes a message to the "my_queue", `message_handler` is called with pushed message as a parameter.
