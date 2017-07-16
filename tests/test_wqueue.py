@@ -16,3 +16,13 @@ class WqueueTestCase(unittest.TestCase):
         self.assertEqual(handler["queue_name"], "my_queue")
 
         self.assertIsNotNone(handler["worker"])
+
+    def test_use_default_configs(self):
+        wqueue = WQueue()
+        self.assertEqual(wqueue.config["redis"]["port"], 6379)
+
+    def test_override_default_config(self):
+        config = {"redis": {"pop_timeout": 5}}
+        wqueue = WQueue(config=config)
+        self.assertEqual(wqueue.config["redis"]["pop_timeout"], 5)
+        self.assertEqual(wqueue.config["redis"]["port"], 6379)

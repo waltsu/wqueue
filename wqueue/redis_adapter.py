@@ -8,10 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class RedisAdapter(object):
-    def __init__(self):
+    def __init__(self, configs):
         self.handlers = []
-        # TODO: Fetch from configs
-        self.redis_client = redis.StrictRedis(host="localhost", port=6379)
+        self.configs = configs["redis"]
+        self.redis_client = redis.StrictRedis(host=self.configs["host"], port=self.configs["port"])
 
     def register(self, queue_name, handler):
         logger.debug("Registering %s" % queue_name)
@@ -31,7 +31,6 @@ class RedisAdapter(object):
             handler["worker"].stop()
 
     def _listen_queue(self, queue_name, handler):
-        # TODO: Fetch timeout from configs
-        redis_response = self.redis_client.blpop([queue_name], timeout=1)
+        redis_response = self.redis_client.blpop([queue_name], timeout=self.configs["pop_timeout"])
         if redis_response:
             handler(redis_response[1])
