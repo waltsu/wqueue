@@ -59,9 +59,9 @@ Application can be started with:
 python wqueue/cli.py worker -a "test_bench.application"
 ```
 
-And the redis producer by going to `test_bench` directory and using:
+And the redis producer by with:
 ```
-python redis_producer.py
+python tests_bench/redis_producer.py
 ```
 
 ## Future work

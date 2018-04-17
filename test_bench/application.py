@@ -8,6 +8,10 @@ from wqueue import WQueue
 wqueue = WQueue()
 
 
+def is_output_ratelimited(current_time):
+    return round(current_time * 1000) % 200 != 0
+
+
 @wqueue.listen_events("test_bench.sha")
 def calculate_sha(raw_number):
     """
@@ -24,4 +28,7 @@ def calculate_sha(raw_number):
         sha = hashlib.sha256()
         sha.update(_random_string())
         digest = sha.hexdigest()
-    print("%i,%i,%s" % (int(time.time()), number, digest))
+
+    current_time = time.time()
+    if not is_output_ratelimited(current_time):
+        print("%i,%i,%s" % (current_time, number, digest))
