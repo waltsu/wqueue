@@ -58,6 +58,6 @@ WQueue could support following message brokers in the future:
 * Kinesis
 
 Also it could use following ways to handle messages:
-* Event-loop: Using asyncio library, WQueue can listen multiple queues and handle messages in them using one event loop. Probably usable in IO heavy tasks.
 * Multiple threads: WQueue could create multiple threads to handle messages from single queue. Because of the GIL, this is also probably good only in IO heavy tasks.
-* Multiple processes and threads: WQueue could spawn N processes with M threads to handle messages from single queue. User should be able to configurable N and M.
+* Event-loop: Using asyncio library, WQueue can listen multiple queues and handle messages in them using one event loop. Probably usable in IO heavy tasks.
+* Multiple processes and threads: WQueue could spawn N processes with M threads to handle messages from single queue. User should be able to configure N and M.
