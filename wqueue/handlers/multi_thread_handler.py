@@ -9,11 +9,15 @@ logger = logging.getLogger(__name__)
 
 
 class MultiThreadHandler(object):
-    def __init__(self, message_queue):
+    def __init__(self, message_queue, config=None):
         self.functions = {}
-        self.config = get_config()["handlers"]["multi_thread"]
         self.is_running = False
         self.message_queue = message_queue
+
+        if config is None:
+            self.config = get_config()["handlers"]["multi_thread"]
+        else:
+            self.config = config
 
     def add_function(self, queue_name, function):
         self.functions[queue_name] = function
