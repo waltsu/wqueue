@@ -9,9 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 class RedisAdapter(object):
-    def __init__(self, message_queue):
+    def __init__(self, message_queue, config=None):
         self.is_running = False
-        self.config = get_config()["redis"]
+        if config is None:
+            self.config = get_config()["redis"]
+        else:
+            self.config = config
 
         self.message_queue = message_queue
 
