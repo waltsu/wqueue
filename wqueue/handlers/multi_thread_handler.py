@@ -53,4 +53,9 @@ class MultiThreadHandler(object):
                 logger.error("Function not found for %s" % event.queue_name)
             elif event:
                 function = functions[event.queue_name]
-                function(event.data)
+                try:
+                    function(event.data)
+                except Exception as exception:
+                    logger.error(
+                        "Function from queue %s raised exception %s" % (event.queue_name, exception)
+                    )
