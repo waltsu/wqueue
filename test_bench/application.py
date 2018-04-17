@@ -5,7 +5,13 @@ import string
 
 from wqueue import WQueue
 
-wqueue = WQueue()
+wqueue = WQueue(config={
+    "handlers": {
+        "multi_thread": {
+            "thread_count": 10
+        }
+    }
+})
 
 
 def is_output_ratelimited(current_time):
