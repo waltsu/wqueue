@@ -40,7 +40,6 @@ class RedisAdapter(object):
         Listens given redis queue until the adapter is stopped
         """
         while self.is_running:
-            # TODO: READ FROM CONFIG
             redis_response = redis_client.blpop([queue_name], timeout=self.config["pop_timeout"])
             if redis_response:
                 message_queue.put_nowait(Event(queue_name, redis_response[1]))
