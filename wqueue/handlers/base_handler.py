@@ -23,7 +23,7 @@ class BaseHandler(object):
         self.functions[queue_name] = function
 
     def start(self):
-        logger.debug("Starting handler %s", self.__name__)
+        logger.debug("Starting handler %s", type(self).__name__)
         self.is_running = True
 
         queue_listener_thread = self._setup_queue_listener_thread(
@@ -32,7 +32,7 @@ class BaseHandler(object):
         queue_listener_thread.start()
 
     def stop(self):
-        logger.debug("Stopping handler %s", self.__name__)
+        logger.debug("Stopping handler %s", type(self).__name__)
         self.is_running = False
 
     def on_event(self, function, event):
