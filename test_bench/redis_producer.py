@@ -3,7 +3,7 @@ import time
 from random import randint
 
 
-SLEEP_TIME = 0.0001
+SLEEP_TIME = 0.0002
 QUEUE_NAME = 'test_bench.sha'
 PRINT_NUMBER = False
 
