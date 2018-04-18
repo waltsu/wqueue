@@ -1,6 +1,7 @@
 import logging
 import threading
 import queue
+from concurrent.futures import ThreadPoolExecutor
 
 from wqueue.config import get_config
 
@@ -23,39 +24,36 @@ class MultiThreadHandler(object):
         self.functions[queue_name] = function
 
     def start(self):
-        thread_count = self.config["thread_count"]
-        threads = self._setup_threads(self.message_queue, self.functions, thread_count)
-
         logger.debug("Starting multi thread handler")
         self.is_running = True
-        for thread in threads:
-            thread.start()
+
+        queue_listener_thread = self._setup_queue_listener_thread(
+            self.message_queue, self.functions
+        )
+        queue_listener_thread.start()
 
     def stop(self):
         logger.debug("Stopping multi thread handler")
         self.is_running = False
 
-    def _setup_threads(self, message_queue, functions, thread_count):
-        logger.info("Setup %i threads" % thread_count)
-        return [
-            threading.Thread(target=self._read_queue, args=[message_queue, functions])
-            for i in range(thread_count)
-        ]
+    def _setup_queue_listener_thread(self, message_queue, functions):
+        return threading.Thread(target=self._read_queue, args=[message_queue, functions])
 
     def _read_queue(self, message_queue, functions):
-        while self.is_running:
-            try:
-                event = message_queue.get(True, self.config["queue_listen_timeout"])
-            except queue.Empty:
-                event = None
+        thread_count = self.config["thread_count"]
+        with ThreadPoolExecutor(max_workers=thread_count) as executor:
+            while self.is_running:
+                event = self._read_event_from_queue(message_queue)
+                if event and event.queue_name in functions.keys():
+                    function = functions[event.queue_name]
+                    executor.submit(function, event.data)
+                elif event is not None:
+                    logger.error("Function not found for %s" % event.queue_name)
 
-            if event is not None and event.queue_name not in functions.keys():
-                logger.error("Function not found for %s" % event.queue_name)
-            elif event:
-                function = functions[event.queue_name]
-                try:
-                    function(event.data)
-                except Exception as exception:
-                    logger.error(
-                        "Function from queue %s raised exception %s" % (event.queue_name, exception)
-                    )
+    def _read_event_from_queue(self, message_queue):
+        try:
+            event = message_queue.get(True, self.config["queue_listen_timeout"])
+        except queue.Empty:
+            event = None
+
+        return event
