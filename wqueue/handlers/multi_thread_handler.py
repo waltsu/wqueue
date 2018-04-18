@@ -2,6 +2,7 @@ import logging
 import threading
 import queue
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 
 from wqueue.config import get_config
 
@@ -46,7 +47,9 @@ class MultiThreadHandler(object):
                 event = self._read_event_from_queue(message_queue)
                 if event and event.queue_name in functions.keys():
                     function = functions[event.queue_name]
-                    executor.submit(function, event.data)
+                    executor.submit(
+                        partial(self._execute_and_log_possible_exception, function, event.data)
+                    )
                 elif event is not None:
                     logger.error("Function not found for %s" % event.queue_name)
 
@@ -57,3 +60,9 @@ class MultiThreadHandler(object):
             event = None
 
         return event
+
+    def _execute_and_log_possible_exception(self, function, argument):
+        try:
+            function(argument)
+        except Exception as exception:
+            logger.exception("Got exception when executing function %s" % function)
