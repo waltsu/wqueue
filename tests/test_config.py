@@ -19,7 +19,7 @@ class ConfigTestCase(unittest.TestCase):
     def test_merges_config_with_default_config(self):
         config.set_config({"handlers": {"multi_thread": {"thread_count": 10}}})
 
-        multi_thread_config = config.get_config()["handlers"]["multi_thread"]
-        self.assertEqual(multi_thread_config["thread_count"], 10)
-        default_timeout = DEFAULTS["handlers"]["multi_thread"]["queue_listen_timeout"]
-        self.assertEqual(multi_thread_config["queue_listen_timeout"], default_timeout)
+        handlers_config = config.get_config()["handlers"]
+        self.assertEqual(handlers_config["multi_thread"]["thread_count"], 10)
+        default_timeout = DEFAULTS["handlers"]["queue_listen_timeout"]
+        self.assertEqual(handlers_config["queue_listen_timeout"], default_timeout)

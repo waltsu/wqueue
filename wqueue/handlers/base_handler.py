@@ -15,7 +15,7 @@ class BaseHandler(object):
         self.message_queue = message_queue
 
         if config is None:
-            self.config = get_config()["handlers"]["multi_thread"]
+            self.config = get_config()
         else:
             self.config = config
 
@@ -52,7 +52,8 @@ class BaseHandler(object):
 
     def _read_event_from_queue(self, message_queue):
         try:
-            event = message_queue.get(True, self.config["queue_listen_timeout"])
+            timeout = self.config["handlers"]["queue_listen_timeout"]
+            event = message_queue.get(True, timeout)
         except queue.Empty:
             event = None
 

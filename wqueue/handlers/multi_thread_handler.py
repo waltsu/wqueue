@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 class MultiThreadHandler(BaseHandler):
     def __init__(self, message_queue, config=None):
         super(MultiThreadHandler, self).__init__(message_queue, config)
-        self.executor = ThreadPoolExecutor(max_workers=self.config['thread_count'])
+        thread_count = self.config["handlers"]["multi_thread"]["thread_count"]
+        self.executor = ThreadPoolExecutor(max_workers=thread_count)
 
     def stop(self):
         super(MultiThreadHandler, self).stop()
